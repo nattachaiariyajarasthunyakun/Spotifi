@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-// กำหนด Type ของ Props ให้ชัดเจน
+// กำหนด Type ของ Props เพื่อความชัดเจนและป้องกัน Error
 type Props = {
   title: string;
   imageUri: string;
-  artist: string; // เพิ่ม Type ตรงนี้
-  onPress?: () => void;
-  isDeleteMode?: boolean;
+  artist: string; 
+  onPress?: () => void; // ฟังก์ชันเมื่อกดที่การ์ด (อาจมีหรือไม่มีก็ได้)
+  isDeleteMode?: boolean; // ตัวบอกว่าอยู่ในหน้าลบหรือเปล่า
 };
 
 export const SongCard = ({ title, imageUri, artist, onPress, isDeleteMode }: Props) => {
@@ -17,19 +17,18 @@ export const SongCard = ({ title, imageUri, artist, onPress, isDeleteMode }: Pro
       style={styles.card} 
       onPress={onPress} 
       activeOpacity={0.7} 
-      disabled={!onPress}
+      disabled={!onPress} // ถ้าไม่มีฟังก์ชัน onPress ส่งมา ปุ่มจะกดไม่ได้
     >
-      {/* แก้ไขลบเครื่องหมาย √ ที่เกินมา */}
       <Image source={{ uri: imageUri }} style={styles.image} />
       
       <View style={styles.info}>
         <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        {/* แสดงชื่อ Artist ที่รับเข้ามา */}
         <Text style={styles.subTitle} numberOfLines={1}>
-          {artist || 'Unknown Artist'}
+          {artist || 'Unknown Artist'} {/* ถ้าไม่มีชื่อ Artist ให้ขึ้น Unknown */}
         </Text> 
       </View>
 
+      {/* ถ้าอยู่ในโหมดลบ (isDeleteMode = true) ให้แสดงไอคอนถังขยะ */}
       {isDeleteMode && (
         <View>
           <Ionicons name="trash" size={24} color="red" />
@@ -38,6 +37,7 @@ export const SongCard = ({ title, imageUri, artist, onPress, isDeleteMode }: Pro
     </TouchableOpacity>
   );
 };
+// ... styles
 
 const styles = StyleSheet.create({
   card: { 
