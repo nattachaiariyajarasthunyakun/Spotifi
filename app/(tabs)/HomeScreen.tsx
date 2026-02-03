@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   songInfoContainer: { width: '100%', alignItems: 'flex-start', marginBottom: 20 },
   fullTitle: { color: 'white', fontWeight: 'bold', fontSize: 24, marginBottom: 5 , alignItems: 'center',alignSelf: 'center'},
-  fullArtist: { color: '#B3B3B3', fontSize: 18 },
+  fullArtist: { color: '#B3B3B3', fontSize: 18 , alignItems: 'center',alignSelf: 'center'},
 
   slider: { width: '100%', height: 40 },
   timeContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 30 },
