@@ -7,7 +7,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 export default function DeleteScreen() {
   const [songs, setSongs] = useState<any[]>([]);
 
-  // โหลดเพลงใหม่ทุกครั้งที่เข้าหน้านี้ (เพื่อให้ข้อมูลตรงกับที่เพิ่มมาล่าสุด)
+  // useFocusEffect: โหลดเพลงใหม่ทุกครั้งที่เข้ามาหน้านี้ (เพื่อให้ข้อมูลตรงกับล่าสุดเสมอ)
   useFocusEffect(
     useCallback(() => {
       loadSongs();
@@ -19,13 +19,14 @@ export default function DeleteScreen() {
     if (stored) setSongs(JSON.parse(stored));
   };
 
-  // ฟังก์ชันลบเพลง
+  // handleDelete: ฟังก์ชันลบเพลง รับ ID เพลงที่จะลบมา
   const handleDelete = async (id: string) => {
-    // สร้าง Array ใหม่ โดยเอาเพลงที่มี ID ตรงกับที่กด "ออกไป" (filter)
+    // filter: สร้าง Array ใหม่ โดยเอาเฉพาะเพลงที่ "ID ไม่ตรงกับตัวที่กดลบ"
+    // (พูดง่ายๆ คือ คัดตัวที่จะลบทิ้งไป เก็บตัวที่เหลือไว้)
     const filtered = songs.filter(song => song.id !== id);
     
-    setSongs(filtered); // อัปเดตหน้าจอ
-    await AsyncStorage.setItem('mySongs', JSON.stringify(filtered)); // บันทึกข้อมูลที่เหลือลงเครื่อง
+    setSongs(filtered); // อัปเดตหน้าจอให้เพลงหายไปทันที
+    await AsyncStorage.setItem('mySongs', JSON.stringify(filtered)); // บันทึกรายการใหม่ลงเครื่อง
   };
 
   return (
@@ -40,8 +41,8 @@ export default function DeleteScreen() {
             title={item.title} 
             imageUri={item.imageUri} 
             artist={item.Artist}
-            isDeleteMode={true} // เปิดโหมดลบ (เพื่อโชว์ไอคอนถังขยะใน SongCard)
-            onPress={() => handleDelete(item.id)} // เมื่อกดการ์ด ให้ลบ ID นั้น
+            isDeleteMode={true} // **จุดสำคัญ** ส่งค่า true ไปบอก SongCard ว่า "ขอโชว์ปุ่มถังขยะนะ"
+            onPress={() => handleDelete(item.id)} // เมื่อกดที่การ์ด ให้ส่ง ID ไปลบ
           />
         )}
         contentContainerStyle={{ padding: 20 }}
@@ -49,11 +50,9 @@ export default function DeleteScreen() {
     </View>
   );
 }
-// ... styles
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212', paddingTop: 50 },
   header: { fontSize: 32, color: 'red', fontWeight: 'bold', marginLeft: 20, marginBottom: 10 }
 });
-
-
